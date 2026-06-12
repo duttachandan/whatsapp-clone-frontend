@@ -5,7 +5,11 @@ import { FaUserGroup } from "react-icons/fa6";
 import { IoHeartCircleSharp } from "react-icons/io5";
 import { useThemeStore } from '../../store/store'
 
+
+
 type Active = "Message" | "Channels" | "Group" | "Status";
+
+
 
 const Navbar = () => {
   // const { theme, setTheme } = useThemeStore();
@@ -28,9 +32,9 @@ const Navbar = () => {
   return (
     <header>
       {/* Side Bar of Whatsapp */}
-      <div className='fixed top-0 bottom-0 left-0 h-screen min-w-[80px]
-        fit-content bg-white shadow-lg'>
-        <div className="flex flex-col gap-4 items-center pt-5">
+      <div className='fixed bottom-0 left-0 h-[60px] z-30 w-screen
+        fit-content bg-white shadow-lg md:top-0 md:h-screen md:min-w-[80px] md:w-fit'>
+        <div className="flex md:flex-col gap-4 items-center p-3 md:pt-5">
           <div onClick={() => handleClick("Message")}>
             <MdOutlineMessage
               size={30}
@@ -61,31 +65,7 @@ const Navbar = () => {
           </div>
         </div>
       </div>
-      {/* Chat Bar of Whatsapp */}
-      <div
-        className="fixed top-0 left-[80px] min-w-[400px] h-screen 
-      shadow-lg">
-        <div className="flex items-center px-4 h-[60px]">
-          <h1 className="font-sans text-2xl font-bold">WhatsApp</h1>
-        </div>
-        <form action="">
-          <div className="border border-1 border-white/20 rounded-full p-2">
-            <button type="submit">Submit</button>
-            <input
-              type="text"
-              name="search-contact"
-              id="search-contact"
-              placeholder="Search or Start a new chat"
-            />
-          </div>
-        </form>
-        <div className="tooltips">
-          <button className="tooltips"></button>
-          <button className="tooltips"></button>
-          <button className="tooltips"></button>
-          <button className="tooltips"></button>
-        </div>
-      </div>
+      
     </header>
   )
 }
