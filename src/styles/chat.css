@@ -1,0 +1,29 @@
+.submit_icon_center {
+    transform: translate(-45%, -50%);
+}
+
+
+.user_message_input_field {
+
+    input:-webkit-autofill,
+    input:-webkit-autofill:hover,
+    input:-webkit-autofill:focus,
+    input:-webkit-autofill:active {
+        /* Delay the browser's background change behavior indefinitely */
+        transition: background-color 99999s ease-in-out 0s;
+    }
+}
+
+.scroll-container {
+
+    /* Hide scrollbar for Chrome, Safari, Opera, and modern Edge */
+    &::-webkit-scrollbar {
+        display: none;
+    }
+
+    /* Hide scrollbar for Firefox */
+    scrollbar-width: none;
+
+    /* Hide scrollbar for older Internet Explorer and Edge */
+    -ms-overflow-style: none;
+}
