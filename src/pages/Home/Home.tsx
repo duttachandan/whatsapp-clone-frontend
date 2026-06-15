@@ -1,8 +1,12 @@
 import { FaMagnifyingGlass } from "react-icons/fa6";
 import { CiMenuKebab } from "react-icons/ci";
+import { FaPlus } from "react-icons/fa6";
+import { MdFileCopy } from "react-icons/md";
+import { IoMdSend } from "react-icons/io";
 
 // dummy content
-import { dummyUser } from '../../../data';
+import { dummyUser, userDummyText } from '../../../data/index.ts';
+import { useCallback, useEffect, useState, useRef } from "react";
 
 interface User {
   userName: string;
@@ -11,10 +15,43 @@ interface User {
 }
 
 const Home = () => {
+  const textRef = useRef<HTMLInputElement | null>(null);
+  const [search, setSearch] = useState<boolean>(false);
+  const [messgaes, setMessages] = useState<any>([]);
+
+  const handleSearch = useCallback(() => {
+    setSearch(!search);
+  }, [search])
+
+  const handleSubmit = useCallback((event: React.SubmitEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (!textRef.current) return;
+
+    const msgPayload = {
+      userType: 'self',
+      text: `${textRef.current?.value}`,
+      time: new Date().toLocaleString(),
+    }
+
+    setMessages((prev: any) => [
+      ...prev, msgPayload
+    ]);
+
+    if (textRef.current) {
+      textRef.current.value = ""
+    };
+  }, [])
+
+  useEffect(() => {
+    setMessages(userDummyText);
+  }, [userDummyText])
+
+  // console.table(messgaes)
+
   return (
     // Chatting Section
     <main
-      className="fixed top-0 left-0 z-20 md:left-[80px] w-full right-0 h-screen 
+      className="fixed top-0 left-0 z-20 md:left-[80px] right-0 h-screen 
       flex items-center"
     >
       {/* Chat Bar of Whatsapp */}
@@ -100,8 +137,8 @@ const Home = () => {
         </div>
       </div>
       {/* Actual Chat Section */}
-      <div className="w-[50%] h-screen bg-gray-300 flex-grow flex items-start">
-        <div className="main-chat-section w-full h-full">
+      <div className="h-screen bg-gray-300 flex-grow w-full flex items-start">
+        <div className={`main-chat-section ${search ? 'w-1/2' : 'w-full'} h-full`}>
           {/* Top Bar Of Chat Section */}
           <div className="top_bar bg-gray-900 flex w-full h-[80px] items-center px-3 py-2 flex-nowrap">
             <div className="profile-image w-[60px] h-[60px] rounded-full overflow-hidden">
@@ -115,21 +152,72 @@ const Home = () => {
               {dummyUser[0].userName}
             </div>
             <div className="w-[15%] min-w-[120px] flex gap-4 items-center ">
-              <FaMagnifyingGlass size={20} color="white" />
+              <div onClick={handleSearch}><FaMagnifyingGlass size={20} color="white" /></div>
               <CiMenuKebab size={20} color="white" />
             </div>
           </div>
           {/* Chat section using websoccket */}
-          <div className="h-full bg-blue-700">
-            <div className="msg_list"></div>
-            <div className="msg_input_field">
-                
+          <div className="h-full bg-black/55 relative">
+            <div
+              className="msg_list h-full pb-[100px] px-3
+              flex flex-col justify-end">
+              <div className="h-fit overflow-y-scroll scroll-container">
+                {
+                  messgaes?.map((msg: any, index: number) => {
+                    if (msg?.userType === 'self') {
+                      return (
+                        <div className="text-right" key={index}>
+                          {msg.text}
+                          {msg.time}
+                        </div>
+                      )
+                    } else {
+                      return (
+                        <div key={index}>
+                          {
+                            msg.text
+                          }
+                          {
+                            msg.time
+                          }
+                        </div>
+                      )
+                    }
+                  })
+                }
+              </div>
+            </div>
+
+            {/* Typed Part of the Message box */}
+            <div className="flex items-center p-2 
+            msg_input_field absolute bottom-[90px] h-[50px] bg-white rounded-full right-4 left-4">
+              <div className="plus_icon p-2 rounded-full hover:bg-black/20 mr-1 cursor-pointer"><FaPlus /></div>
+              <div className="files_icon p-2 rounded-full hover:bg-black/20 mr-1 cursor-pointer"><MdFileCopy /></div>
+              <form onSubmit={(event) => handleSubmit(event)} className="flex-grow flex item-center rounded-full">
+                <input
+                  className="w-full user_message_input_field focus:outline-none selection:bg-none"
+                  type="text"
+                  name="message"
+                  id="user_message"
+                  autoComplete="off"
+                  ref={textRef}
+                />
+                <button
+                  type="submit"
+                  className="h-[32px] w-[32px] hover:bg-black/20 
+                  rounded-full relative
+                  "
+                >
+                  <IoMdSend className="absolute top-1/2 left-1/2 submit_icon_center" />
+                </button>
+              </form>
             </div>
           </div>
         </div>
-        {/* <div className="search-option w-[50%] bg-black/95 h-screen hidden">
-          
-        </div> */}
+        {/* Side Search Option */}
+        <div className={`search-option w-[50%] bg-black/95 h-screen ${search ? '' : 'hidden'}`}>
+
+        </div>
       </div>
     </main>
   )
